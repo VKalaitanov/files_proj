@@ -1,17 +1,17 @@
 <h1 align="center">Инструкция по запуску</h1>
 
 <h3>Подготовка к проекту:</h3>
-- создаем проект с виртуальным окружением(python 3.9)
-- запускаем Docker на вашем компьютере
+<p>- создаем проект с виртуальным окружением(python 3.9)</p>
+<p>- запускаем Docker на вашем компьютере</p>
 
 
 <h3>В консоли:</h3>
-- клонируете репозиторий в ваш проект: git clone https://github.com/VKalaitanov/files_proj.git
-- переходите в директорию проекта: cd files_proj
-- запуск проекта в контейнере: docker-compose up --build
+<p>- клонируете репозиторий в ваш проект: git clone https://github.com/VKalaitanov/files_proj.git</p>
+<p>- переходите в директорию проекта: cd files_proj</p>
+<p>- запуск проекта в контейнере: docker-compose up --build</p>
 
 <h3>Тестируем:</h3>
-- url в браузере: <a href="http://localhost:8000/docs">Жми чтобы перейти</a>
+<p>- url в браузере: <a href="http://localhost:8000/docs">Жми чтобы перейти</a></p>
 
 
 
