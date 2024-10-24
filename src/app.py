@@ -37,7 +37,7 @@ def get_db():
 
 # Фоновая задача для наблюдения за директорией
 def start_file_monitoring():
-    directory_to_watch = "src/files"  # Директория, за которой будем следить
+    directory_to_watch = "src/files"
     db_session = SessionLocal()
 
     # Запускаем мониторинг с помощью watchdog
@@ -145,12 +145,16 @@ def delete_file_by_name(file_name: str, db: Session = Depends(get_db)):
     db_file = db.query(File).filter(File.name == file_name).first()
 
     if db_file:
-        file_path = os.path.join(db_file.path, f"{db_file.name}{db_file.extension}")
+        # Формируем полный путь к файлу
+        file_path = os.path.join(db_file.path)
+
+        # Логируем полный путь к файлу
+        logging.info(f"Попытка удалить файл по пути: {file_path}")
 
         # Проверяем существование файла на диске
         if os.path.exists(file_path):
             try:
-                os.remove(file_path)
+                os.remove(file_path)  # Удаляем файл с диска
                 logging.info(f"Файл {file_path} успешно удалён.")
             except Exception as e:
                 logging.error(f"Ошибка при удалении файла {file_path}: {e}")

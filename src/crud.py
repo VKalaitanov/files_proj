@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 from datetime import datetime
 from typing import List
 
@@ -96,7 +97,7 @@ def update_file(db: Session, db_file: File, file_update: FileUpdate) -> File:
 
         # Переименовываем и перемещаем файл на уровне файловой системы
         if os.path.exists(old_path):
-            os.rename(old_path, new_path)
+            shutil.move(old_path, new_path)  # Заменяем os.rename на shutil.move
 
         # Обновляем путь и имя в базе данных
         db_file.name = new_name  # Имя без расширения
@@ -108,7 +109,7 @@ def update_file(db: Session, db_file: File, file_update: FileUpdate) -> File:
 
         # Перемещаем файл
         if os.path.exists(old_path):
-            os.rename(old_path, new_path)
+            shutil.move(old_path, new_path)  # Заменяем os.rename на shutil.move
 
         # Обновляем путь в базе данных
         db_file.path = new_path
@@ -135,33 +136,19 @@ def handle_file_path_change(new_dir: str, file_name: str, extension: str, old_pa
         return os.path.join(os.path.dirname(old_path), file_name + extension)
 
 
-def delete_file(db: Session, file_name: str) -> dict:
-    """Удаляет файл и запись о нём из базы данных."""
-    deleted_file = db.query(File).filter(File.name == file_name).first()
+def delete_file(db: Session, file_id: int) -> dict:
+    """Удаляет запись о файле из базы данных."""
+    deleted_file = db.query(File).filter(File.id == file_id).first()
 
     if not deleted_file:
         raise HTTPException(status_code=404, detail="Файл не найден")
 
-    file_path = deleted_file.path  # Получаем путь к файлу
-
-    # Логируем попытку удаления
-    logging.info(f"Попытка удаления файла по пути: {file_path}")
-
-    # Удаляем файл с диска, если он существует
-    if os.path.exists(file_path):
-        try:
-            os.remove(file_path)  # Удаляем файл
-            logging.info(f"Файл {file_path} успешно удалён")
-        except (PermissionError, OSError) as e:
-            logging.error(f"Ошибка при удалении файла: {e}")
-            raise HTTPException(status_code=500, detail=f"Ошибка при удалении файла: {e}")
-
     # Удаляем информацию о файле из базы данных
     db.delete(deleted_file)
     db.commit()
-    logging.info(f"Запись о файле {file_name} удалена из базы данных")
+    logging.info(f"Запись о файле с ID {file_id} удалена из базы данных")
 
-    return {"message": f"Файл {file_name} был успешно удалён"}
+    return {"message": f"Запись о файле с ID {file_id} была успешно удалена"}
 
 
 def download_file(db: Session, file_name: str) -> Response:
