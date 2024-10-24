@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, func
+
 from src.database import Base
-from datetime import datetime
+
 
 class File(Base):
     __tablename__ = "files"

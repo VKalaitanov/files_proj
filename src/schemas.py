@@ -4,6 +4,7 @@ from pydantic import BaseModel, validator
 from typing import Optional
 from datetime import datetime
 
+
 class FileBase(BaseModel):
     name: str
     extension: str
@@ -14,7 +15,6 @@ class FileBase(BaseModel):
     comment: Optional[str] = None
 
 
-
 class FileCreate(BaseModel):
     name: str
     extension: str
@@ -22,10 +22,12 @@ class FileCreate(BaseModel):
     path: str
     comment: Optional[str] = None
 
+
 class FileUpdate(BaseModel):
     name: Optional[str] = None
     path: Optional[str] = None
     comment: Optional[str] = None
+
 
 class FileResponse(FileBase):
     class Config:
